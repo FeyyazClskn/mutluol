@@ -1,0 +1,48 @@
+:root{--bg:#080706;--paper:#efe4cf;--ink:#282218}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;overflow-x:hidden}
+.app{min-height:100svh;display:grid;place-items:center}
+.scene-shell{width:min(100vw,calc(100svh * 1672 / 941));aspect-ratio:1672/941}
+.scene{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate;background:#000}
+.room-image{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+.hotspot{position:absolute;z-index:40;margin:0;padding:0;border:0;background:transparent;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.hotspot:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
+.debug .hotspot{background:rgba(255,0,0,.18)}
+
+/* Coordinates are tied to the exact room.jpg canvas: 1672 × 941. */
+#mirrorHotspot{left:67.9%;top:7.0%;width:10.8%;height:30.2%}
+#notebookHotspot{left:16.0%;top:67.5%;width:18.0%;height:18.0%}
+
+
+.mirror-effect{position:absolute;z-index:50;left:68.7%;top:7.15%;width:10.55%;height:29.25%;pointer-events:none;border-radius:13% 13% 14% 14%;overflow:hidden;opacity:0}
+.mirror-effect.show{opacity:1}
+.crack-svg{position:absolute;inset:0;width:100%;height:100%}
+.crack-main path,.crack-glint path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.crack-main path{stroke:rgba(255,255,255,.96);stroke-width:1.2;filter:drop-shadow(0 1px 1px rgba(0,0,0,.9))}
+.crack-glint path{stroke:rgba(255,255,255,.58);stroke-width:.5;filter:blur(.25px)}
+.impact{fill:rgba(255,255,255,.96);filter:drop-shadow(0 0 3px rgba(255,255,255,.8))}
+.mirror-effect.show .crack-main path{stroke-dasharray:420;stroke-dashoffset:420;animation:crackDraw .8s cubic-bezier(.17,.84,.32,1) forwards}
+.mirror-effect.show .crack-glint path{opacity:0;animation:glint .8s ease .08s forwards}
+.mirror-effect.show .impact{animation:impact .45s ease .08s both}
+.mirror-flash{position:absolute;inset:20% 18%;border-radius:50%;background:rgba(255,255,255,.36);filter:blur(18px);opacity:0}
+.mirror-effect.show .mirror-flash{animation:flash .32s ease both}
+@keyframes crackDraw{to{stroke-dashoffset:0}}
+@keyframes glint{0%{opacity:0}25%{opacity:1}100%{opacity:.24}}
+@keyframes impact{0%{transform:scale(.5);opacity:0}25%{transform:scale(1.8);opacity:1}100%{transform:scale(1);opacity:.78}}
+@keyframes flash{0%{opacity:0;transform:scale(.75)}20%{opacity:1}100%{opacity:0;transform:scale(1.2)}}
+
+.mirror-message{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;pointer-events:none;opacity:0;visibility:hidden}
+.mirror-message.show{visibility:visible;animation:message 2.85s ease forwards}
+.mirror-message-card{max-width:min(720px,90vw);padding:18px 24px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(9,8,7,.72);backdrop-filter:blur(15px);box-shadow:0 25px 70px rgba(0,0,0,.38);font-size:clamp(15px,1.25vw,20px);font-weight:650;text-align:center}
+@keyframes message{0%{opacity:0;transform:translateY(8px) scale(.985)}12%,72%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-8px) scale(.99);visibility:hidden}}
+
+.modal-backdrop{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.53);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease}
+.modal-backdrop.open{opacity:1;visibility:visible}
+.notebook-panel{position:relative;width:min(640px,94vw);border:1px solid rgba(39,34,25,.22);border-radius:22px;color:var(--ink);background:repeating-linear-gradient(to bottom,rgba(93,123,153,.09) 0,rgba(93,123,153,.09) 1px,transparent 1px,transparent 31px),var(--paper);box-shadow:0 28px 90px rgba(0,0,0,.55);transform:translateY(16px) rotate(-.35deg) scale(.985);transition:transform .26s cubic-bezier(.2,.8,.2,1);padding:34px 34px 28px 46px}
+.modal-backdrop.open .notebook-panel{transform:none}
+.notebook-panel:before{content:"";position:absolute;left:13px;top:0;bottom:0;width:10px;background:radial-gradient(circle at 50% 15px,#45413b 0 2px,transparent 2.6px) 0 0/10px 31px repeat-y;opacity:.6}
+.notebook-header{padding-right:44px;margin-bottom:20px}.eyebrow{display:block;margin-bottom:4px;font:500 11px/1.2 "DM Mono",monospace;letter-spacing:.15em;text-transform:uppercase;opacity:.58}.notebook-header h2{margin:0;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em}.modal-close{position:absolute;right:14px;top:12px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(39,34,25,.08);color:var(--ink);font-size:28px;line-height:1;cursor:pointer}.modal-close:hover{background:rgba(39,34,25,.14)}
+.notes-list{display:grid;gap:10px;margin-bottom:24px}.note-item{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:12px 14px;border:1px solid rgba(39,34,25,.08);border-radius:12px;background:rgba(255,255,255,.35)}.note-text{font-size:15px;line-height:1.48}.note-delete{width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:rgba(39,34,25,.58);font-size:20px;cursor:pointer}.add-note{padding-top:18px;border-top:1px dashed rgba(39,34,25,.2)}.add-note label{display:block;margin-bottom:8px;font-size:14px;font-weight:700}.add-note textarea{width:100%;min-height:88px;resize:vertical;padding:13px 14px;border:1px solid rgba(39,34,25,.16);border-radius:12px;background:rgba(255,255,255,.46);color:var(--ink);font:inherit;outline:none}.add-note-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}#noteCounter{font:500 11px/1 "DM Mono",monospace;opacity:.52}.add-button{border:0;border-radius:999px;background:#28231b;color:#f8f0df;padding:11px 17px;font-weight:700;cursor:pointer;display:inline-block}
+
+@media(max-width:700px){.modal-backdrop{padding:12px}.notebook-panel{left:auto}.notebook-panel:before{left:10px}}
